@@ -1,4 +1,4 @@
-function SortVisualizer(canvas, width, height, array, drawMode) {
+function SortVisualizer(canvas, width, height, array, drawMode, callback) {
     canvas.width = width;
     canvas.height = height;
     this.ctx = canvas.getContext('2d');
@@ -10,6 +10,7 @@ function SortVisualizer(canvas, width, height, array, drawMode) {
     else if(drawMode == 1) {
         this.ctx.scale(width/2, height/2);
         this.ctx.translate(1, 1);
+        this.ctx.rotate(-Math.PI/2);
     }
     this.array = [...array];
     this.__array = [...array];
@@ -22,6 +23,7 @@ function SortVisualizer(canvas, width, height, array, drawMode) {
     });
     this.actions = [];
     this.lastAction = undefined;
+    this.callback = callback;
 }
 SortVisualizer.prototype.draw = function() {
     if(this.drawMode == 0) {
@@ -62,17 +64,17 @@ SortVisualizer.prototype.draw = function() {
         let b = -1;
         if(this.lastAction) {
             if(this.lastAction.type === 'compare') {
-                c = 'blue';
+                //c = 'blue';
                 a = this.lastAction.a;
                 b = this.lastAction.b;
             }
             else if(this.lastAction.type === 'swap') {
-                c = 'red';
+                //c = 'red';
                 a = this.lastAction.a;
                 b = this.lastAction.b;
             }
             else if(this.lastAction.type === 'set') {
-                c = 'green';
+                //c = 'green';
                 a = this.lastAction.a;
             }
         }
@@ -81,7 +83,8 @@ SortVisualizer.prototype.draw = function() {
             if(i == a || i == b) {
                 this.ctx.fillStyle = c;
             }
-            let r = (v+this.max-this.min)/(this.max-this.min)/2;
+            //let r = (v+this.max-this.min)/(this.max-this.min)/2;
+            let r = 1;
             let sp = Math.PI*i*2/this.__array.length;
             let ep = Math.PI*(i+1)*2/this.__array.length;
             this.ctx.beginPath();
@@ -106,6 +109,9 @@ SortVisualizer.prototype.shiftAction = function() {
         else if(this.lastAction.type === 'set') {
             this.__array[this.lastAction.a] = this.lastAction.b;
         }
+    }
+    else {
+        this.callback();
     }
 };
 SortVisualizer.prototype.compare = function(a, b) {

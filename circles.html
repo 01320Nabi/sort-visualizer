@@ -6,16 +6,15 @@
     </head>
     <body>
         <div>
-            <button onclick="randomSort(visualizer)">Randomize</button>
-            <button onclick="reverse(visualizer)">Reverse</button>
-            <button onclick="visualizer.bubbleSort()">Bubble Sort</button>
-            <button onclick="visualizer.selectionSort()">Selection Sort</button>
-            <button onclick="visualizer.insertionSort()">Insertion Sort</button>
-            <button onclick="visualizer.shellSort()">Shell Sort</button>
-            <button onclick="visualizer.mergeSort()">Merge Sort</button>
-            <button onclick="visualizer.quickSort()">Quick Sort</button>
-            <button onclick="visualizer.heapSort()">Heap Sort</button>
-            <button onclick="bogoSort(visualizer)">Bogo Sort</button>
+            <button onclick="setIntervals(100);randomSort(visualizer)">Randomize</button>
+            <button onclick="setIntervals(100);reverse(visualizer)">Reverse</button>
+            <button onclick="setIntervals(100);visualizer.bubbleSort()">Bubble Sort</button>
+            <button onclick="setIntervals(100);visualizer.selectionSort()">Selection Sort</button>
+            <button onclick="setIntervals(100);visualizer.insertionSort()">Insertion Sort</button>
+            <button onclick="setIntervals(10);visualizer.shellSort()">Shell Sort</button>
+            <button onclick="setIntervals(10);visualizer.mergeSort()">Merge Sort</button>
+            <button onclick="setIntervals(10);visualizer.quickSort()">Quick Sort</button>
+            <button onclick="setIntervals(10);visualizer.heapSort()">Heap Sort</button>
         </div>
         <canvas id='sort-visualize'></canvas>
     </body>
@@ -27,7 +26,7 @@
             array.push(i+1);
         }
         
-        let visualizer = new SortVisualizer(document.getElementById('sort-visualize'), 1800, 900, array, 1);
+        let visualizer = new SortVisualizer(document.getElementById('sort-visualize'), 1800, 900, array, 1, clearIntervals);
         visualizer.draw();
 
         function randomSort(v) {
@@ -44,31 +43,23 @@
             }
         }
 
-        function bogoSort(v) {
-            let bogo = function(v, i) {
-                if(v.compare(i, i+1)) {
-                    if(i+1<v.length-1) {
-                        setTimeout(bogo, 1, v, i+1);
-                    }
-                }
-                else {
-                    randomSort(v);
-                    setTimeout(bogo, 1, v, 0);
-                }
-            }
-            bogo(v, 0);
-        }
-
         let intervals = [];
-        for(let i=0; i<100; i++) {
-            intervals.push(setInterval((v) => {
-                v.shiftAction();
-                v.draw();
-            }, 10, visualizer));
+
+        function setIntervals(c) {
+            for(let i=0; i<c; i++) {
+                intervals.push(setInterval(v => v.shiftAction(), 10, visualizer));
+            }
         }
 
-        window.addEventListener('close', () => {
-            intervals.forEach(interval => clearInterval(interval));
-        });
+        function clearIntervals() {
+            while(intervals.length>0) {
+                clearInterval(intervals.pop());
+            }
+        }
+
+        (function draw() {
+            visualizer.draw();
+            requestAnimationFrame(draw);
+        })();
     </script>
 </html>
