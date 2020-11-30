@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sort Visualizer</title>
+    </head>
+    <body>
+        <div>
+            <button onclick="randomSort(visualizer)">Randomize</button>
+            <button onclick="reverse(visualizer)">Reverse</button>
+            <button onclick="visualizer.bubbleSort()">Bubble Sort</button>
+            <button onclick="visualizer.selectionSort()">Selection Sort</button>
+            <button onclick="visualizer.insertionSort()">Insertion Sort</button>
+            <button onclick="visualizer.shellSort()">Shell Sort</button>
+            <button onclick="visualizer.mergeSort()">Merge Sort</button>
+            <button onclick="visualizer.quickSort()">Quick Sort</button>
+            <button onclick="visualizer.heapSort()">Heap Sort</button>
+            <button onclick="bogoSort(visualizer)">Bogo Sort</button>
+        </div>
+        <canvas id='sort-visualize'></canvas>
+    </body>
+    <script src="sort_visualize.js"></script>
+    <script src="algorithms.js"></script>
+    <script>
+        let array = [];
+        for(let i=0; i<500; i++) {
+            array.push(i+1);
+        }
+        
+        let visualizer = new SortVisualizer(document.getElementById('sort-visualize'), 1800, 900, array, 0);
+        visualizer.draw();
+
+        function randomSort(v) {
+            let randomIndex = function() {
+                return Math.floor(Math.random()*v.length);
+            };
+            for(let i=0; i<v.length; i++) {
+                v.swap(i, randomIndex());
+            }
+        }
+        function reverse(v) {
+            for(let i=0; i<Math.floor(v.length/2); i++) {
+                v.swap(i, v.length-i-1);
+            }
+        }
+
+        function bogoSort(v) {
+            let bogo = function(v, i) {
+                if(v.compare(i, i+1)) {
+                    if(i+1<v.length-1) {
+                        setTimeout(bogo, 1, v, i+1);
+                    }
+                }
+                else {
+                    randomSort(v);
+                    setTimeout(bogo, 1, v, 0);
+                }
+            }
+            bogo(v, 0);
+        }
+
+        let intervals = [];
+        for(let i=0; i<100; i++) {
+            intervals.push(setInterval((v) => {
+                v.shiftAction();
+                v.draw();
+            }, 10, visualizer));
+        }
+
+        window.addEventListener('close', () => {
+            intervals.forEach(interval => clearInterval(interval));
+        });
+    </script>
+</html>
