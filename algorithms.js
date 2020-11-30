@@ -15,7 +15,7 @@ SortVisualizer.prototype.bubbleSort = function() {
 
 SortVisualizer.prototype.selectionSort = function() {
     for(let i=0; i<this.length-1; i++) {
-        for(let j=i+1; j<this.length; j++) {
+        for(let j=this.length; j>i; j--) {
             if(this.compare(j, i)) {
                 this.swap(i, j);
             }
