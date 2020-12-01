@@ -6,16 +6,11 @@
     </head>
     <body>
         <div>
-            <button onclick="setIntervals(100);randomSort(visualizer)">Randomize</button>
-            <button onclick="setIntervals(100);reverse(visualizer)">Reverse</button>
-            <button onclick="setIntervals(100);visualizer.bubbleSort()">Bubble Sort</button>
-            <button onclick="setIntervals(100);visualizer.selectionSort()">Selection Sort</button>
-            <button onclick="setIntervals(100);visualizer.insertionSort()">Insertion Sort</button>
-            <button onclick="setIntervals(10);visualizer.shellSort()">Shell Sort</button>
-            <button onclick="setIntervals(10);visualizer.mergeSort()">Merge Sort</button>
-            <button onclick="setIntervals(10);visualizer.quickSort()">Quick Sort</button>
-            <button onclick="setIntervals(10);visualizer.heapSort()">Heap Sort</button>
-            <button onclick="setIntervals(10);visualizer.radixSort(4)">Radix Sort</button>
+            <button onclick="setIntervals(10, 10);randomSort(visualizer)">Randomize</button>
+            <button onclick="setIntervals(10, 10);reverse(visualizer)">Reverse</button>
+            <button onclick="setIntervals(100, 10);visualizer.bubbleSort()">Bubble Sort</button>
+            <button onclick="setIntervals(100, 10);visualizer.selectionSort()">Selection Sort</button>
+            <button onclick="setIntervals(100, 10);visualizer.insertionSort()">Insertion Sort</button>
         </div>
         <canvas id='sort-visualize'></canvas>
     </body>
@@ -23,12 +18,11 @@
     <script src="algorithms.js"></script>
     <script>
         let array = [];
-        for(let i=0; i<512; i++) {
-            array.push(i+1);
+        for(let i=0; i<500; i++) {
+            array.push(i);
         }
         
         let visualizer = new SortVisualizer(document.getElementById('sort-visualize'), 1800, 900, array, 1, clearIntervals);
-        visualizer.draw();
 
         function randomSort(v) {
             let randomIndex = function() {
@@ -45,10 +39,11 @@
         }
 
         let intervals = [];
-
-        function setIntervals(c) {
+        function setIntervals(c, t) {
             for(let i=0; i<c; i++) {
-                intervals.push(setInterval(v => v.shiftAction(), 10, visualizer));
+                intervals.push(setInterval(v => {
+                    v.shiftAction();
+                }, t, visualizer));
             }
         }
 

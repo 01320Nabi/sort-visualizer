@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sort Visualizer</title>
+    </head>
+    <body>
+        <div>
+            <button onclick="setIntervals(10, 10);randomSort(visualizer)">Randomize</button>
+            <button onclick="setIntervals(10, 10);reverse(visualizer)">Reverse</button>
+            <button onclick="setIntervals(20, 10);visualizer.shellSort()">Shell Sort</button>
+            <button onclick="setIntervals(20, 10);visualizer.mergeSort()">Merge Sort</button>
+            <button onclick="setIntervals(20, 10);visualizer.quickSort()">Quick Sort</button>
+            <button onclick="setIntervals(20, 10);visualizer.heapSort()">Heap Sort</button>
+            <button onclick="setIntervals(10, 10);visualizer.radixSort(4)">Radix Sort</button>
+        </div>
+        <canvas id='sort-visualize'></canvas>
+    </body>
+    <script src="sort_visualize.js"></script>
+    <script src="algorithms.js"></script>
+    <script>
+        let array = [];
+        for(let i=0; i<1000; i++) {
+            array.push(i);
+        }
+        
+        let visualizer = new SortVisualizer(document.getElementById('sort-visualize'), 1800, 900, array, 1, clearIntervals);
+
+        function randomSort(v) {
+            let randomIndex = function() {
+                return Math.floor(Math.random()*v.length);
+            };
+            for(let i=0; i<v.length; i++) {
+                v.swap(i, randomIndex());
+            }
+        }
+        function reverse(v) {
+            for(let i=0; i<Math.floor(v.length/2); i++) {
+                v.swap(i, v.length-i-1);
+            }
+        }
+
+        let intervals = [];
+        function setIntervals(c, t) {
+            for(let i=0; i<c; i++) {
+                intervals.push(setInterval(()=>visualizer.shiftAction(), t));
+            }
+        }
+
+        function clearIntervals() {
+            while(intervals.length>0) {
+                clearInterval(intervals.pop());
+            }
+        }
+
+        (function draw() {
+            visualizer.draw();
+            requestAnimationFrame(draw);
+        })();
+    </script>
+</html>

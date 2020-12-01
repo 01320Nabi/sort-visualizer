@@ -142,7 +142,7 @@ SortVisualizer.prototype.radixSort = function(base) {
         length++;
     }
     for(let i=0; i<length; i++) {
-        let out = new Array(this.length);
+        let arr = [...this.array];
         let cnt = [];
         for(let j=0; j<base; j++) {
             cnt.push(0);
@@ -156,10 +156,7 @@ SortVisualizer.prototype.radixSort = function(base) {
             cnt[j] += cnt[j-1];
         }
         for(let j=this.length-1; j>=0; j--) {
-            out[--cnt[radixes[j]]] = this.array[j];
-        }
-        for(let j=0; j<this.length; j++) {
-            this.set(j, out[j]);
+            this.set([--cnt[radixes[j]]], arr[j]);
         }
     }
 }
