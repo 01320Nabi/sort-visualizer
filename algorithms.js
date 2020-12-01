@@ -1,3 +1,20 @@
+SortVisualizer.prototype.compareRaw = function(a, b, aR, bR) {
+    let aV = a;
+    let bV = b;
+    if(!aR) {
+        aV = this.array[a];
+    }
+    if(!bR) {
+        bV = this.array[b];
+    }
+    this.actions.push({type: 'compare', a: aR?-1:a, b: bR?-1:b});
+    return aV < bV;
+};
+SortVisualizer.prototype.getRadix = function(a, base, i) {
+    this.actions.push({type: 'compare', a: a, b: -1});
+    return Math.floor((this.array[a]%Math.pow(base,i+1))/Math.pow(base, i));
+};
+
 SortVisualizer.prototype.bubbleSort = function() {
     for(let i=0; i<this.length-1; i++) {
         let swapped = false;
@@ -15,11 +32,13 @@ SortVisualizer.prototype.bubbleSort = function() {
 
 SortVisualizer.prototype.selectionSort = function() {
     for(let i=0; i<this.length-1; i++) {
-        for(let j=this.length; j>i; j--) {
-            if(this.compare(j, i)) {
-                this.swap(i, j);
+        let m = i;
+        for(let j=i+1; j<this.length; j++) {
+            if(this.compare(j, m)) {
+                m = j;
             }
         }
+        this.swap(i, m);
     }
 };
 
@@ -114,3 +133,33 @@ SortVisualizer.prototype.heapSort = function() {
         heap(this, 0, i);
     }
 };
+
+SortVisualizer.prototype.radixSort = function(base) {
+    let length = 0;
+    let max = this.max;
+    while(max) {
+        max = Math.floor(max/base);
+        length++;
+    }
+    for(let i=0; i<length; i++) {
+        let out = new Array(this.length);
+        let cnt = [];
+        for(let j=0; j<base; j++) {
+            cnt.push(0);
+        }
+        let radixes = new Array(this.length);
+        for(let j=0; j<this.length; j++) {
+            radixes[j] = this.getRadix(j, base, i);
+            cnt[radixes[j]]++;
+        }
+        for(let j=1; j<base; j++) {
+            cnt[j] += cnt[j-1];
+        }
+        for(let j=this.length-1; j>=0; j--) {
+            out[--cnt[radixes[j]]] = this.array[j];
+        }
+        for(let j=0; j<this.length; j++) {
+            this.set(j, out[j]);
+        }
+    }
+}

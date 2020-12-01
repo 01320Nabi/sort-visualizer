@@ -15,6 +15,7 @@
             <button onclick="setIntervals(10);visualizer.mergeSort()">Merge Sort</button>
             <button onclick="setIntervals(10);visualizer.quickSort()">Quick Sort</button>
             <button onclick="setIntervals(10);visualizer.heapSort()">Heap Sort</button>
+            <button onclick="setIntervals(10);visualizer.radixSort(4)">Radix Sort</button>
         </div>
         <canvas id='sort-visualize'></canvas>
     </body>
@@ -22,7 +23,7 @@
     <script src="algorithms.js"></script>
     <script>
         let array = [];
-        for(let i=0; i<500; i++) {
+        for(let i=0; i<512; i++) {
             array.push(i+1);
         }
         
